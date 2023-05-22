@@ -305,7 +305,11 @@ getXdgDirectoryListFallback xdgDirs =
 
 getAppUserDataDirectoryInternal :: FilePath -> IO FilePath
 getAppUserDataDirectoryInternal appName =
+# if defined(haiku_HOST_OS)
+  (\ home -> home <> ("/config/settings/." ++ appName)) <$> getHomeDirectoryInternal
+# else
   (\ home -> home <> ('/' : '.' : appName)) <$> getHomeDirectoryInternal
+# endif
 
 getUserDocumentsDirectoryInternal :: IO FilePath
 getUserDocumentsDirectoryInternal = getHomeDirectoryInternal
